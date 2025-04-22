@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,9 +12,9 @@ interface Video {
   description: string;
   label?: 'Top Choice' | 'New' | 'Mixed' | 'Collection';
   background: string;
+  aspectRatio: '1:1' | '4:5' | '16:9' | '9:16';
 }
 
-// Using reliable placeholder images
 const videos: Video[] = [
   {
     id: '1',
@@ -25,6 +24,7 @@ const videos: Video[] = [
     description: 'Where silence speaks, dunes shift, and the adventure begins.',
     label: 'Top Choice',
     background: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b',
+    aspectRatio: '16:9',
   },
   {
     id: '2',
@@ -34,6 +34,7 @@ const videos: Video[] = [
     description: 'Dive into the mysterious world beneath the waves.',
     label: 'New',
     background: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5',
+    aspectRatio: '4:5',
   },
   {
     id: '3',
@@ -43,6 +44,7 @@ const videos: Video[] = [
     description: 'Rise above the clouds and touch the sky.',
     label: 'Mixed',
     background: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
+    aspectRatio: '1:1',
   },
   {
     id: '4',
@@ -52,6 +54,7 @@ const videos: Video[] = [
     description: 'Where ancient trees whisper stories of the wild.',
     label: 'Collection',
     background: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+    aspectRatio: '9:16',
   },
 ];
 
@@ -105,9 +108,23 @@ const VideoCarousel = () => {
     );
   };
 
+  const getAspectRatioClass = (ratio: string) => {
+    switch (ratio) {
+      case '1:1':
+        return 'aspect-square';
+      case '4:5':
+        return 'aspect-[4/5]';
+      case '16:9':
+        return 'aspect-video';
+      case '9:16':
+        return 'aspect-[9/16]';
+      default:
+        return 'aspect-video';
+    }
+  };
+
   return (
     <div className="relative w-full max-w-7xl mx-auto p-4">
-      {/* Background Image with fixed URLs */}
       <div 
         className="fixed inset-0 z-0 transition-opacity duration-500 bg-cover bg-center bg-no-repeat"
         style={{
@@ -116,7 +133,6 @@ const VideoCarousel = () => {
         }}
       />
 
-      {/* Hero Content */}
       <div className="relative z-10 text-center mb-12 text-white">
         <h1 className="text-5xl font-serif mb-4 tracking-wide animate-fade-in">
           {videos[currentVideoIndex].title}
@@ -136,28 +152,31 @@ const VideoCarousel = () => {
         </Button>
       </div>
 
-      {/* Video Grid with Enhanced 3D Effect */}
       <div 
         ref={containerRef}
-        className="relative z-10 perspective-1000 transform-gpu h-[300px] flex items-center justify-center"
+        className="relative z-10 perspective-1000 transform-gpu h-[400px] flex items-center justify-center overflow-visible"
       >
-        <div className="relative flex gap-4 transform-gpu" 
-             style={{ 
-               transform: 'rotateX(10deg) translateZ(-100px)',
-               transformStyle: 'preserve-3d'
-             }}>
+        <div 
+          className="relative flex gap-4 transform-gpu" 
+          style={{ 
+            transform: `rotateX(10deg) translateZ(-100px)`,
+            transformStyle: 'preserve-3d'
+          }}
+        >
           {videos.map((video, index) => {
             const offset = index - currentVideoIndex;
-            const rotation = offset * -15; // Adjust rotation angle for curved effect
-            const translateZ = Math.abs(offset) * 20; // Add depth effect
-            const opacity = 1 - Math.min(0.6, Math.abs(offset) * 0.2); // Fade based on distance
+            const rotation = offset * -15;
+            const translateZ = Math.abs(offset) * 20;
+            const opacity = 1 - Math.min(0.6, Math.abs(offset) * 0.2);
 
             return (
               <div
                 key={video.id}
                 className={cn(
-                  "relative rounded-lg overflow-hidden cursor-pointer transition-all duration-500 transform-gpu",
-                  "w-[250px] h-[200px]",
+                  "relative overflow-hidden cursor-pointer transition-all duration-500 transform-gpu",
+                  "w-[250px]",
+                  getAspectRatioClass(video.aspectRatio),
+                  "rounded-lg",
                   "hover:ring-2 hover:ring-white/50",
                   index === currentVideoIndex && "ring-2 ring-white scale-110 z-10"
                 )}
@@ -168,7 +187,6 @@ const VideoCarousel = () => {
                 }}
                 onClick={() => setCurrentVideoIndex(index)}
               >
-                {/* Thumbnail with fixed URLs */}
                 {!isVideoPlaying[index] && (
                   <img
                     src={video.thumbnail}
