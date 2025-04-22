@@ -5,7 +5,11 @@ import { Heart, ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { videos, Video } from '../data/videos';
 
-const VideoCarousel = () => {
+interface VideoCarouselProps {
+  isTransitioning: boolean;
+}
+
+const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [isVideoPlaying, setIsVideoPlaying] = useState<boolean[]>(new Array(videos.length).fill(false));
@@ -17,59 +21,73 @@ const VideoCarousel = () => {
     if (autoScrollTimerRef.current) {
       clearTimeout(autoScrollTimerRef.current);
     }
-    autoScrollTimerRef.current = window.setTimeout(() => {
-      handleNext();
-    }, 5000);
+    
+    if (!isTransitioning) {
+      autoScrollTimerRef.current = window.setTimeout(() => {
+        handleNext();
+      }, 5000);
+    }
   };
 
   useEffect(() => {
-    startAutoScroll();
+    if (!isTransitioning) {
+      startAutoScroll();
+    }
+    
     return () => {
       if (autoScrollTimerRef.current) {
         clearTimeout(autoScrollTimerRef.current);
       }
     };
-  }, [currentVideoIndex]);
+  }, [currentVideoIndex, isTransitioning]);
+
+  useEffect(() => {
+    if (!isTransitioning) {
+      videoRefs.current.forEach((videoRef, index) => {
+        if (videoRef) {
+          if (index === currentVideoIndex) {
+            videoRef.play().catch(() => {
+              console.log('Video play failed');
+            });
+            setIsVideoPlaying(prev => {
+              const newState = [...prev];
+              newState[index] = true;
+              return newState;
+            });
+          } else {
+            videoRef.pause();
+            videoRef.currentTime = 0;
+            setIsVideoPlaying(prev => {
+              const newState = [...prev];
+              newState[index] = false;
+              return newState;
+            });
+          }
+        }
+      });
+    }
+  }, [currentVideoIndex, isTransitioning]);
 
   const handlePrevious = () => {
-    setCurrentVideoIndex((prev) => (prev - 1 + videos.length) % videos.length);
+    if (!isTransitioning) {
+      setCurrentVideoIndex((prev) => (prev - 1 + videos.length) % videos.length);
+    }
   };
 
   const handleNext = () => {
-    setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+    if (!isTransitioning) {
+      setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+    }
   };
 
-  useEffect(() => {
-    videoRefs.current.forEach((videoRef, index) => {
-      if (videoRef) {
-        if (index === currentVideoIndex) {
-          videoRef.play().catch(() => {
-            console.log('Video play failed');
-          });
-          setIsVideoPlaying(prev => {
-            const newState = [...prev];
-            newState[index] = true;
-            return newState;
-          });
-        } else {
-          videoRef.pause();
-          videoRef.currentTime = 0;
-          setIsVideoPlaying(prev => {
-            const newState = [...prev];
-            newState[index] = false;
-            return newState;
-          });
-        }
-      }
-    });
-  }, [currentVideoIndex]);
-
   const toggleFavorite = (videoId: string) => {
-    setFavorites(prev =>
-      prev.includes(videoId)
-        ? prev.filter(id => id !== videoId)
-        : [...prev, videoId]
-    );
+    if (!isTransitioning) {
+      setFavorites(prev =>
+        prev.includes(videoId)
+          ? prev.filter(id => id !== videoId)
+          : [...prev, videoId]
+      );
+    }
   };
 
   const getAspectRatioClass = (ratio: string) => {
@@ -97,9 +115,22 @@ const VideoCarousel = () => {
     return indices;
   };
 
+  const getTransitionIndices = () => {
+    const totalVideos = videos.length;
+    const indices = [];
+    for (let i = -4; i <= 4; i++) {
+      const index = (currentVideoIndex + i + totalVideos) % totalVideos;
+      indices.push(index);
+    }
+    return indices;
+  };
+
   return (
     <div className="relative w-full mx-auto">
-      <div className="relative z-10 text-center mb-4 text-white">
+      <div className={cn(
+        "relative z-10 text-center mb-4 text-white",
+        isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'
+      )}>
         <h1 className="text-4xl md:text-5xl font-serif mb-3 tracking-wide animate-fade-in">
           {videos[currentVideoIndex].title}
         </h1>
@@ -121,7 +152,10 @@ const VideoCarousel = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
+        className={cn(
+          "fixed left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white",
+          isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'
+        )}
         onClick={handlePrevious}
       >
         <ArrowLeft className="h-4 w-4 md:h-6 md:w-6" />
@@ -130,7 +164,10 @@ const VideoCarousel = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
+        className={cn(
+          "fixed right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white",
+          isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'
+        )}
         onClick={handleNext}
       >
         <ArrowRight className="h-4 w-4 md:h-6 md:w-6" />
@@ -138,21 +175,32 @@ const VideoCarousel = () => {
 
       <div 
         ref={containerRef}
-        className="relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] scale-75 md:scale-85"
+        className={cn(
+          "relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] transition-all duration-1000",
+          isTransitioning ? "scale-110" : "scale-75 md:scale-85"
+        )}
       >
         <div 
-          className="relative flex gap-3 md:gap-4 transform-gpu" 
+          className={cn(
+            "relative flex gap-3 md:gap-4 transform-gpu transition-all duration-1000", 
+          )}
           style={{ 
-            transform: `rotateX(5deg) translateZ(-30px)`,
-            transformStyle: 'preserve-3d'
+            transform: `rotateX(${isTransitioning ? '10deg' : '5deg'}) translateZ(-30px)`,
+            transformStyle: 'preserve-3d',
+            transition: "all 2s cubic-bezier(0.215, 0.610, 0.355, 1.000)"
           }}
         >
-          {getVisibleIndices().map((index, i) => {
-            const offset = i - 2;
-            const rotation = offset * -10;
-            const translateX = offset * 30;
-            const translateZ = Math.abs(offset) * -60;
-            const opacity = 1 - Math.min(0.8, Math.abs(offset) * 0.3);
+          {(isTransitioning ? getTransitionIndices() : getVisibleIndices()).map((index, i) => {
+            const totalItems = isTransitioning ? 9 : 5;
+            const centerOffset = Math.floor(totalItems / 2);
+            const offset = i - centerOffset;
+            const rotation = isTransitioning ? offset * -7 : offset * -10;
+            const translateX = isTransitioning ? offset * 25 : offset * 30;
+            const translateZ = isTransitioning ? Math.abs(offset) * -50 : Math.abs(offset) * -60;
+            const opacity = isTransitioning 
+              ? 1 - Math.min(0.6, Math.abs(offset) * 0.15)
+              : 1 - Math.min(0.8, Math.abs(offset) * 0.3);
+              
             const video = videos[index];
 
             return (
@@ -163,16 +211,17 @@ const VideoCarousel = () => {
                   getAspectRatioClass(video.aspectRatio),
                   "rounded-lg",
                   "hover:ring-2 hover:ring-white/50",
-                  index === currentVideoIndex && "ring-2 ring-white scale-110 z-10"
+                  index === currentVideoIndex && !isTransitioning && "ring-2 ring-white scale-110 z-10"
                 )}
                 style={{
                   transform: `perspective(2000px) rotateY(${rotation}deg) translateX(${translateX}px) translateZ(${translateZ}px)`,
                   opacity: opacity,
                   transformOrigin: '50% 50%',
+                  transition: 'all 1.5s cubic-bezier(0.215, 0.610, 0.355, 1.000)'
                 }}
-                onClick={() => setCurrentVideoIndex(index)}
+                onClick={() => !isTransitioning && setCurrentVideoIndex(index)}
               >
-                {!isVideoPlaying[index] && (
+                {(!isVideoPlaying[index] || isTransitioning) && (
                   <img
                     src={video.thumbnail}
                     alt={video.title}
@@ -183,7 +232,7 @@ const VideoCarousel = () => {
                   ref={(el) => (videoRefs.current[index] = el)}
                   className={cn(
                     "w-full h-full object-cover",
-                    !isVideoPlaying[index] && "hidden"
+                    (!isVideoPlaying[index] || isTransitioning) && "hidden"
                   )}
                   src={video.url}
                   muted
