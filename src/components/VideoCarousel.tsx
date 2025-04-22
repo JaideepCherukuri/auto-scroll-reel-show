@@ -169,20 +169,31 @@ const VideoCarousel = () => {
   const getAspectRatioClass = (ratio: string) => {
     switch (ratio) {
       case '1:1':
-        return 'aspect-square w-[300px]';
+        return 'aspect-square w-[400px]';
       case '4:5':
-        return 'aspect-[4/5] w-[240px]';
+        return 'aspect-[4/5] w-[320px]';
       case '16:9':
-        return 'aspect-video w-[400px]';
+        return 'aspect-video w-[500px]';
       case '9:16':
-        return 'aspect-[9/16] w-[169px]';
+        return 'aspect-[9/16] w-[225px]';
       default:
-        return 'aspect-video w-[400px]';
+        return 'aspect-video w-[500px]';
     }
   };
 
+  // Calculate the infinite scroll indices
+  const getVisibleIndices = () => {
+    const totalVideos = videos.length;
+    const indices = [];
+    for (let i = -2; i <= 2; i++) {
+      const index = (currentVideoIndex + i + totalVideos) % totalVideos;
+      indices.push(index);
+    }
+    return indices;
+  };
+
   return (
-    <div className="relative w-full max-w-7xl mx-auto p-4">
+    <div className="relative w-full max-w-[2000px] mx-auto p-4">
       <div 
         className="fixed inset-0 z-0 transition-opacity duration-500 bg-cover bg-center bg-no-repeat"
         style={{
@@ -191,7 +202,7 @@ const VideoCarousel = () => {
         }}
       />
 
-      <div className="relative z-10 text-center mb-12 text-white">
+      <div className="relative z-10 text-center mb-8 text-white">
         <h1 className="text-5xl font-serif mb-4 tracking-wide animate-fade-in">
           {videos[currentVideoIndex].title}
         </h1>
@@ -210,49 +221,46 @@ const VideoCarousel = () => {
         </Button>
       </div>
 
-      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-20">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-12 h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
-          onClick={handlePrevious}
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </Button>
-      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="fixed left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
+        onClick={handlePrevious}
+      >
+        <ArrowLeft className="h-6 w-6" />
+      </Button>
 
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-12 h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
-          onClick={handleNext}
-        >
-          <ArrowRight className="h-6 w-6" />
-        </Button>
-      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="fixed right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
+        onClick={handleNext}
+      >
+        <ArrowRight className="h-6 w-6" />
+      </Button>
 
       <div 
         ref={containerRef}
-        className="relative z-10 perspective-2000 transform-gpu h-[600px] flex items-center justify-center overflow-visible"
+        className="relative z-10 perspective-2000 transform-gpu h-[700px] flex items-center justify-center overflow-visible"
       >
         <div 
-          className="relative flex gap-6 transform-gpu" 
+          className="relative flex gap-4 transform-gpu" 
           style={{ 
-            transform: `rotateX(5deg) translateZ(-100px)`,
+            transform: `rotateX(5deg) translateZ(-50px)`,
             transformStyle: 'preserve-3d'
           }}
         >
-          {videos.map((video, index) => {
-            const offset = index - currentVideoIndex;
-            const rotation = offset * -15;
-            const translateX = offset * 50;
-            const translateZ = Math.abs(offset) * -100;
+          {getVisibleIndices().map((index, i) => {
+            const offset = i - 2; // Center is at index 2
+            const rotation = offset * -12; // Reduced rotation angle
+            const translateX = offset * 40; // Reduced spacing
+            const translateZ = Math.abs(offset) * -80; // Increased depth
             const opacity = 1 - Math.min(0.8, Math.abs(offset) * 0.3);
+            const video = videos[index];
 
             return (
               <div
-                key={video.id}
+                key={`${video.id}-${index}`}
                 className={cn(
                   "relative overflow-hidden cursor-pointer transition-all duration-500 transform-gpu",
                   getAspectRatioClass(video.aspectRatio),
