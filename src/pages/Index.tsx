@@ -10,7 +10,7 @@ const Index = () => {
     // Set transition to complete after animation duration
     const timer = setTimeout(() => {
       setIsTransitioning(false);
-    }, 2000); // 2 seconds transition
+    }, 3500); // 3.5 seconds transition (increased from 2s)
 
     return () => clearTimeout(timer);
   }, []);
@@ -34,9 +34,9 @@ const Index = () => {
         {/* Centered Carousel Section */}
         <div className="flex-1 flex items-center justify-center w-full">
           <div 
-            className={`w-full max-w-[85vw] md:max-w-[90vw] transform-gpu transition-all duration-2000 ease-out perspective-[2000px] transform-style-preserve-3d ${
+            className={`w-full max-w-[85vw] md:max-w-[90vw] transform-gpu transition-all duration-[3500ms] ease-out perspective-[2000px] transform-style-preserve-3d ${
               isTransitioning 
-                ? 'scale-[0.95] md:scale-[0.98] opacity-95' 
+                ? 'scale-[0.4] md:scale-[0.5] opacity-95' 
                 : 'scale-[0.65] md:scale-[0.8] opacity-100'
             }`}
           >

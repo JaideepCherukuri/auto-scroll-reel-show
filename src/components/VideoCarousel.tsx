@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,9 +14,52 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [isVideoPlaying, setIsVideoPlaying] = useState<boolean[]>(new Array(videos.length).fill(false));
+  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(new Array(videos.length).fill(false));
+  const [videosLoaded, setVideosLoaded] = useState<boolean[]>(new Array(videos.length).fill(false));
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const autoScrollTimerRef = useRef<number | null>(null);
+
+  // Preload images
+  useEffect(() => {
+    videos.forEach((video, index) => {
+      const img = new Image();
+      img.src = video.thumbnail;
+      img.onload = () => {
+        setImagesLoaded(prev => {
+          const newState = [...prev];
+          newState[index] = true;
+          return newState;
+        });
+      };
+    });
+  }, []);
+
+  // Handle video preloading
+  useEffect(() => {
+    const handleVideoCanPlayThrough = (index: number) => {
+      setVideosLoaded(prev => {
+        const newState = [...prev];
+        newState[index] = true;
+        return newState;
+      });
+    };
+
+    videoRefs.current.forEach((videoRef, index) => {
+      if (videoRef) {
+        videoRef.addEventListener('canplaythrough', () => handleVideoCanPlayThrough(index));
+      }
+    });
+
+    return () => {
+      videoRefs.current.forEach((videoRef, index) => {
+        if (videoRef) {
+          videoRef.removeEventListener('canplaythrough', () => handleVideoCanPlayThrough(index));
+        }
+      });
+    };
+  }, []);
 
   const startAutoScroll = () => {
     if (autoScrollTimerRef.current) {
@@ -46,14 +90,17 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
       videoRefs.current.forEach((videoRef, index) => {
         if (videoRef) {
           if (index === currentVideoIndex) {
-            videoRef.play().catch(() => {
-              console.log('Video play failed');
-            });
-            setIsVideoPlaying(prev => {
-              const newState = [...prev];
-              newState[index] = true;
-              return newState;
-            });
+            // Wait a bit to ensure smooth transition before playing
+            setTimeout(() => {
+              videoRef.play().catch(() => {
+                console.log('Video play failed');
+              });
+              setIsVideoPlaying(prev => {
+                const newState = [...prev];
+                newState[index] = true;
+                return newState;
+              });
+            }, 500);
           } else {
             videoRef.pause();
             videoRef.currentTime = 0;
@@ -129,7 +176,7 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
     <div className="relative w-full mx-auto">
       <div className={cn(
         "relative z-10 text-center mb-4 text-white",
-        isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'
+        isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'
       )}>
         <h1 className="text-4xl md:text-5xl font-serif mb-3 tracking-wide animate-fade-in">
           {videos[currentVideoIndex].title}
@@ -154,7 +201,7 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
         size="icon"
         className={cn(
           "fixed left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white",
-          isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'
+          isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'
         )}
         onClick={handlePrevious}
       >
@@ -166,7 +213,7 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
         size="icon"
         className={cn(
           "fixed right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white",
-          isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'
+          isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'
         )}
         onClick={handleNext}
       >
@@ -176,18 +223,18 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
       <div 
         ref={containerRef}
         className={cn(
-          "relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] transition-all duration-[2000ms]",
+          "relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] transition-all duration-[3500ms]",
           isTransitioning ? "scale-[0.4]" : "scale-75 md:scale-85"
         )}
       >
         <div 
           className={cn(
-            "relative flex gap-3 md:gap-4 transform-gpu transition-all duration-[2000ms]", 
+            "relative flex gap-3 md:gap-4 transform-gpu transition-all duration-[3500ms]", 
           )}
           style={{ 
             transform: `rotateX(${isTransitioning ? '15deg' : '5deg'}) translateZ(-30px)`,
             transformStyle: 'preserve-3d',
-            transition: "all 2s cubic-bezier(0.215, 0.610, 0.355, 1.000)"
+            transition: "all 3.5s cubic-bezier(0.215, 0.610, 0.355, 1.000)"
           }}
         >
           {(isTransitioning ? getTransitionIndices() : getVisibleIndices()).map((index, i) => {
@@ -207,7 +254,7 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
               <div
                 key={`${video.id}-${index}`}
                 className={cn(
-                  "relative overflow-hidden cursor-pointer transition-all duration-500 transform-gpu",
+                  "relative overflow-hidden cursor-pointer transition-all duration-1000 transform-gpu",
                   getAspectRatioClass(video.aspectRatio),
                   "rounded-lg",
                   "hover:ring-2 hover:ring-white/50",
@@ -217,15 +264,24 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
                   transform: `perspective(2000px) rotateY(${rotation}deg) translateX(${translateX}px) translateZ(${translateZ}px)`,
                   opacity: opacity,
                   transformOrigin: '50% 50%',
-                  transition: 'all 1.5s cubic-bezier(0.215, 0.610, 0.355, 1.000)'
+                  transition: 'all 3.5s cubic-bezier(0.215, 0.610, 0.355, 1.000)'
                 }}
                 onClick={() => !isTransitioning && setCurrentVideoIndex(index)}
               >
                 {(!isVideoPlaying[index] || isTransitioning) && (
                   <img
+                    ref={(el) => (imageRefs.current[index] = el)}
                     src={video.thumbnail}
                     alt={video.title}
                     className="w-full h-full object-cover"
+                    loading="eager" // Force eager loading for transition images
+                    onLoad={() => {
+                      setImagesLoaded(prev => {
+                        const newState = [...prev];
+                        newState[index] = true;
+                        return newState;
+                      });
+                    }}
                   />
                 )}
                 <video
@@ -238,6 +294,7 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
                   muted
                   playsInline
                   loop
+                  preload="auto" // Preload video content
                 />
                 {video.label && (
                   <Badge
