@@ -57,7 +57,9 @@ const videos: Video[] = [
 const VideoCarousel = () => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [isVideoPlaying, setIsVideoPlaying] = useState<boolean[]>(new Array(videos.length).fill(false));
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const playCurrentVideo = () => {
@@ -67,9 +69,19 @@ const VideoCarousel = () => {
             videoRef.play().catch(() => {
               console.log('Video play failed');
             });
+            setIsVideoPlaying(prev => {
+              const newState = [...prev];
+              newState[index] = true;
+              return newState;
+            });
           } else {
             videoRef.pause();
             videoRef.currentTime = 0;
+            setIsVideoPlaying(prev => {
+              const newState = [...prev];
+              newState[index] = false;
+              return newState;
+            });
           }
         }
       });
@@ -96,25 +108,23 @@ const VideoCarousel = () => {
     <div className="relative w-full max-w-7xl mx-auto p-4">
       {/* Background Image */}
       <div 
-        className="fixed inset-0 z-0 transition-opacity duration-500"
+        className="fixed inset-0 z-0 transition-opacity duration-500 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)), url(${videos[currentVideoIndex].background})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
           opacity: 0.8
         }}
       />
 
       {/* Hero Content */}
       <div className="relative z-10 text-center mb-12 text-white">
-        <h1 className="text-5xl font-serif mb-4 tracking-wide">
+        <h1 className="text-5xl font-serif mb-4 tracking-wide animate-fade-in">
           {videos[currentVideoIndex].title}
         </h1>
-        <p className="text-xl text-gray-200 mb-6">
+        <p className="text-xl text-gray-200 mb-6 animate-fade-in">
           {videos[currentVideoIndex].description}
         </p>
         <Button
-          className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white"
+          className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white animate-scale-in"
           onClick={() => toggleFavorite(videos[currentVideoIndex].id)}
         >
           <Heart className={cn(
@@ -125,39 +135,62 @@ const VideoCarousel = () => {
         </Button>
       </div>
 
-      {/* Video Grid */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {videos.map((video, index) => (
-          <div
-            key={video.id}
-            className={cn(
-              "relative rounded-lg overflow-hidden cursor-pointer transition-all duration-500",
-              "hover:ring-2 hover:ring-white/50",
-              index === currentVideoIndex && "ring-2 ring-white scale-105"
-            )}
-            onClick={() => setCurrentVideoIndex(index)}
-          >
-            <video
-              ref={(el) => (videoRefs.current[index] = el)}
-              className="w-full h-[200px] object-cover"
-              src={video.url}
-              muted
-              playsInline
-              loop
-            />
-            {video.label && (
-              <Badge
-                className="absolute top-2 right-2 bg-black/50 text-white backdrop-blur-sm"
-                variant="secondary"
+      {/* Video Grid with 3D Effect */}
+      <div 
+        ref={containerRef}
+        className="relative z-10 perspective-1000 transform-gpu"
+      >
+        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 transform-gpu rotateX-10">
+          {videos.map((video, index) => {
+            const offset = index - currentVideoIndex;
+            const rotation = offset * -15; // Adjust rotation angle for curved effect
+
+            return (
+              <div
+                key={video.id}
+                className={cn(
+                  "relative rounded-lg overflow-hidden cursor-pointer transition-all duration-500 transform-gpu",
+                  "hover:ring-2 hover:ring-white/50",
+                  index === currentVideoIndex && "ring-2 ring-white scale-105"
+                )}
+                style={{
+                  transform: `perspective(1000px) rotateY(${rotation}deg) translateZ(${Math.abs(offset) * -50}px)`,
+                }}
+                onClick={() => setCurrentVideoIndex(index)}
               >
-                {video.label}
-              </Badge>
-            )}
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-              <h3 className="text-white font-medium truncate">{video.title}</h3>
-            </div>
-          </div>
-        ))}
+                {!isVideoPlaying[index] && (
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="w-full h-[200px] object-cover"
+                  />
+                )}
+                <video
+                  ref={(el) => (videoRefs.current[index] = el)}
+                  className={cn(
+                    "w-full h-[200px] object-cover",
+                    !isVideoPlaying[index] && "hidden"
+                  )}
+                  src={video.url}
+                  muted
+                  playsInline
+                  loop
+                />
+                {video.label && (
+                  <Badge
+                    className="absolute top-2 right-2 bg-black/50 text-white backdrop-blur-sm"
+                    variant="secondary"
+                  >
+                    {video.label}
+                  </Badge>
+                )}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <h3 className="text-white font-medium truncate">{video.title}</h3>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
