@@ -176,13 +176,13 @@ const VideoCarousel = ({ isTransitioning }: VideoCarouselProps) => {
       <div 
         ref={containerRef}
         className={cn(
-          "relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] transition-all duration-1000",
+          "relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] transition-all duration-[2000ms]",
           isTransitioning ? "scale-110" : "scale-75 md:scale-85"
         )}
       >
         <div 
           className={cn(
-            "relative flex gap-3 md:gap-4 transform-gpu transition-all duration-1000", 
+            "relative flex gap-3 md:gap-4 transform-gpu transition-all duration-[2000ms]", 
           )}
           style={{ 
             transform: `rotateX(${isTransitioning ? '10deg' : '5deg'}) translateZ(-30px)`,

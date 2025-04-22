@@ -2,8 +2,6 @@
 import { useEffect, useState } from 'react';
 import VideoCarousel from '../components/VideoCarousel';
 import { videos } from '../data/videos';
-import { Button } from '@/components/ui/button';
-import { Play } from 'lucide-react';
 
 const Index = () => {
   const [isTransitioning, setIsTransitioning] = useState(true);
@@ -33,23 +31,6 @@ const Index = () => {
 
       {/* Content Container */}
       <div className="relative h-full z-10 flex flex-col items-center justify-center">
-        {/* Hero Section with CTA */}
-        <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl text-white font-bold mb-4 animate-fade-in">
-            Experience Cinematic Wonder
-          </h1>
-          <p className="text-base md:text-lg text-gray-200 animate-fade-in max-w-2xl mx-auto px-4 mb-6">
-            Immerse yourself in our visually stunning video collection
-          </p>
-          <Button 
-            size="lg" 
-            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white animate-scale-in"
-          >
-            <Play className="mr-2" size={18} />
-            Start Watching
-          </Button>
-        </div>
-
         {/* Centered Carousel Section */}
         <div className="flex-1 flex items-center justify-center w-full">
           <div 
