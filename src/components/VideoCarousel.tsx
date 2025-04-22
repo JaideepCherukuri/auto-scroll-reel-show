@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Heart } from 'lucide-react';
+import { Heart, ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Video {
@@ -19,103 +20,83 @@ const videos: Video[] = [
   {
     id: '1',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b',
-    title: 'Tech Frontiers',
-    description: 'Exploring the cutting edge of technology.',
+    thumbnail: 'https://images.unsplash.com/photo-1472396961693-142e6e269027',
+    title: 'Mountain Wildlife',
+    description: 'Majestic deer in their natural habitat',
     label: 'Top Choice',
-    background: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b',
+    background: 'https://images.unsplash.com/photo-1472396961693-142e6e269027',
     aspectRatio: '16:9',
   },
   {
     id: '2',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5',
-    title: 'Digital Matrix',
-    description: 'Journey through the digital realm.',
+    thumbnail: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+    title: 'Waterfall Bridge',
+    description: 'Scenic bridge over majestic falls',
     label: 'New',
-    background: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5',
+    background: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
     aspectRatio: '9:16',
   },
   {
     id: '3',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
-    title: 'Nature\'s Call',
-    description: 'Wilderness in its purest form.',
+    thumbnail: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07',
+    title: 'Wildflower Fields',
+    description: 'Vibrant orange flowers in bloom',
     label: 'Mixed',
-    background: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
+    background: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07',
     aspectRatio: '1:1',
   },
   {
     id: '4',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
-    title: 'Urban Stories',
-    description: 'City life through a new lens.',
+    thumbnail: 'https://images.unsplash.com/photo-1482938289607-e9573fc25ebb',
+    title: 'Mountain River',
+    description: 'Pristine river through mountains',
     label: 'Collection',
-    background: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+    background: 'https://images.unsplash.com/photo-1482938289607-e9573fc25ebb',
     aspectRatio: '16:9',
   },
   {
     id: '5',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6',
-    title: 'Code Masters',
-    description: 'Programming excellence unveiled.',
+    thumbnail: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9',
+    title: 'Pine Forest',
+    description: 'Dense pine forest vista',
     label: 'Top Choice',
-    background: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6',
+    background: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9',
     aspectRatio: '4:5',
   },
   {
     id: '6',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
-    title: 'AI Future',
-    description: 'The next frontier of intelligence.',
+    thumbnail: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
+    title: 'Forest Canopy',
+    description: 'Towering trees reaching skyward',
     label: 'New',
-    background: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
+    background: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86',
     aspectRatio: '1:1',
   },
   {
     id: '7',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d',
-    title: 'Digital Work',
-    description: 'Modern workplace evolution.',
+    thumbnail: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843',
+    title: 'Sun Through Trees',
+    description: 'Golden sunlight filtering through leaves',
     label: 'Mixed',
-    background: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d',
+    background: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843',
     aspectRatio: '9:16',
   },
   {
     id: '8',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1',
-    title: 'Tech Horizons',
-    description: 'Exploring future possibilities.',
+    thumbnail: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e',
+    title: 'Mountain Rays',
+    description: 'Sunbeams over mountain peaks',
     label: 'Collection',
-    background: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1',
+    background: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e',
     aspectRatio: '16:9',
-  },
-  {
-    id: '9',
-    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
-    title: 'Code Art',
-    description: 'Where programming meets creativity.',
-    label: 'New',
-    background: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
-    aspectRatio: '4:5',
-  },
-  {
-    id: '10',
-    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7',
-    title: 'Digital Life',
-    description: 'Technology in everyday moments.',
-    label: 'Top Choice',
-    background: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7',
-    aspectRatio: '1:1',
-  },
+  }
 ];
 
 const VideoCarousel = () => {
@@ -124,40 +105,57 @@ const VideoCarousel = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState<boolean[]>(new Array(videos.length).fill(false));
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const autoScrollTimerRef = useRef<number | null>(null);
+
+  const startAutoScroll = () => {
+    if (autoScrollTimerRef.current) {
+      clearTimeout(autoScrollTimerRef.current);
+    }
+    autoScrollTimerRef.current = window.setTimeout(() => {
+      handleNext();
+    }, 5000);
+  };
 
   useEffect(() => {
-    const playCurrentVideo = () => {
-      videoRefs.current.forEach((videoRef, index) => {
-        if (videoRef) {
-          if (index === currentVideoIndex) {
-            videoRef.play().catch(() => {
-              console.log('Video play failed');
-            });
-            setIsVideoPlaying(prev => {
-              const newState = [...prev];
-              newState[index] = true;
-              return newState;
-            });
-          } else {
-            videoRef.pause();
-            videoRef.currentTime = 0;
-            setIsVideoPlaying(prev => {
-              const newState = [...prev];
-              newState[index] = false;
-              return newState;
-            });
-          }
-        }
-      });
+    startAutoScroll();
+    return () => {
+      if (autoScrollTimerRef.current) {
+        clearTimeout(autoScrollTimerRef.current);
+      }
     };
+  }, [currentVideoIndex]);
 
-    playCurrentVideo();
+  const handlePrevious = () => {
+    setCurrentVideoIndex((prev) => (prev - 1 + videos.length) % videos.length);
+  };
 
-    const timer = setTimeout(() => {
-      setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
-    }, 5000);
+  const handleNext = () => {
+    setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+  };
 
-    return () => clearTimeout(timer);
+  useEffect(() => {
+    videoRefs.current.forEach((videoRef, index) => {
+      if (videoRef) {
+        if (index === currentVideoIndex) {
+          videoRef.play().catch(() => {
+            console.log('Video play failed');
+          });
+          setIsVideoPlaying(prev => {
+            const newState = [...prev];
+            newState[index] = true;
+            return newState;
+          });
+        } else {
+          videoRef.pause();
+          videoRef.currentTime = 0;
+          setIsVideoPlaying(prev => {
+            const newState = [...prev];
+            newState[index] = false;
+            return newState;
+          });
+        }
+      }
+    });
   }, [currentVideoIndex]);
 
   const toggleFavorite = (videoId: string) => {
@@ -171,15 +169,15 @@ const VideoCarousel = () => {
   const getAspectRatioClass = (ratio: string) => {
     switch (ratio) {
       case '1:1':
-        return 'aspect-square';
+        return 'aspect-square w-[300px]';
       case '4:5':
-        return 'aspect-[4/5]';
+        return 'aspect-[4/5] w-[240px]';
       case '16:9':
-        return 'aspect-video';
+        return 'aspect-video w-[400px]';
       case '9:16':
-        return 'aspect-[9/16]';
+        return 'aspect-[9/16] w-[169px]';
       default:
-        return 'aspect-video';
+        return 'aspect-video w-[400px]';
     }
   };
 
@@ -212,38 +210,60 @@ const VideoCarousel = () => {
         </Button>
       </div>
 
+      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-20">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-12 h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
+          onClick={handlePrevious}
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </Button>
+      </div>
+
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-12 h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
+          onClick={handleNext}
+        >
+          <ArrowRight className="h-6 w-6" />
+        </Button>
+      </div>
+
       <div 
         ref={containerRef}
-        className="relative z-10 perspective-2000 transform-gpu h-[500px] flex items-center justify-center overflow-visible"
+        className="relative z-10 perspective-2000 transform-gpu h-[600px] flex items-center justify-center overflow-visible"
       >
         <div 
           className="relative flex gap-6 transform-gpu" 
           style={{ 
-            transform: `rotateX(12deg) translateZ(-150px)`,
+            transform: `rotateX(5deg) translateZ(-100px)`,
             transformStyle: 'preserve-3d'
           }}
         >
           {videos.map((video, index) => {
             const offset = index - currentVideoIndex;
-            const rotation = offset * -12;
-            const translateZ = Math.abs(offset) * 30;
-            const opacity = 1 - Math.min(0.6, Math.abs(offset) * 0.15);
+            const rotation = offset * -15;
+            const translateX = offset * 50;
+            const translateZ = Math.abs(offset) * -100;
+            const opacity = 1 - Math.min(0.8, Math.abs(offset) * 0.3);
 
             return (
               <div
                 key={video.id}
                 className={cn(
                   "relative overflow-hidden cursor-pointer transition-all duration-500 transform-gpu",
-                  "w-[300px]",
                   getAspectRatioClass(video.aspectRatio),
                   "rounded-lg",
                   "hover:ring-2 hover:ring-white/50",
                   index === currentVideoIndex && "ring-2 ring-white scale-110 z-10"
                 )}
                 style={{
-                  transform: `perspective(2000px) rotateY(${rotation}deg) translateZ(${translateZ}px)`,
+                  transform: `perspective(2000px) rotateY(${rotation}deg) translateX(${translateX}px) translateZ(${translateZ}px)`,
                   opacity: opacity,
-                  transformOrigin: 'center center',
+                  transformOrigin: '50% 50%',
                 }}
                 onClick={() => setCurrentVideoIndex(index)}
               >
