@@ -89,8 +89,43 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
+			transformStyle: {
+				'preserve-3d': 'preserve-3d',
+				'flat': 'flat',
+			},
+			perspective: {
+				'none': 'none',
+				'500': '500px',
+				'1000': '1000px',
+				'2000': '2000px',
+			},
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }) {
+			const newUtilities = {
+				'.perspective-500': {
+					perspective: '500px',
+				},
+				'.perspective-1000': {
+					perspective: '1000px',
+				},
+				'.perspective-2000': {
+					perspective: '2000px',
+				},
+				'.transform-style-preserve-3d': {
+					transformStyle: 'preserve-3d',
+				},
+				'.rotateX-10': {
+					transform: 'rotateX(10deg)',
+				},
+				'.rotateY-15': {
+					transform: 'rotateY(15deg)',
+				},
+			};
+			addUtilities(newUtilities);
+		}
+	],
 } satisfies Config;
