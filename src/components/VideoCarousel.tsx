@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -201,7 +200,6 @@ const VideoCarousel = () => {
     }
   };
 
-  // Calculate the infinite scroll indices
   const getVisibleIndices = () => {
     const totalVideos = videos.length;
     const indices = [];
@@ -214,19 +212,11 @@ const VideoCarousel = () => {
 
   return (
     <div className="relative w-full mx-auto">
-      <div 
-        className="fixed inset-0 z-0 transition-opacity duration-500 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)), url(${videos[currentVideoIndex].background})`,
-          opacity: 0.8
-        }}
-      />
-
       <div className="relative z-10 text-center mb-4 text-white">
-        <h1 className="text-3xl md:text-4xl font-serif mb-2 tracking-wide animate-fade-in">
+        <h1 className="text-4xl md:text-5xl font-serif mb-3 tracking-wide animate-fade-in">
           {videos[currentVideoIndex].title}
         </h1>
-        <p className="text-base md:text-lg text-gray-200 mb-3 animate-fade-in max-w-2xl mx-auto">
+        <p className="text-base md:text-lg text-gray-200 mb-4 animate-fade-in max-w-2xl mx-auto">
           {videos[currentVideoIndex].description}
         </p>
         <Button
@@ -261,7 +251,7 @@ const VideoCarousel = () => {
 
       <div 
         ref={containerRef}
-        className="relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] md:h-[65vh] scale-75 md:scale-90"
+        className="relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] scale-75 md:scale-85"
       >
         <div 
           className="relative flex gap-3 md:gap-4 transform-gpu" 
