@@ -15,42 +15,43 @@ interface Video {
   background: string;
 }
 
+// Using reliable placeholder images
 const videos: Video[] = [
   {
     id: '1',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    thumbnail: '/lovable-uploads/2a48033f-11a4-44cc-8b8b-31ed013ea791.png',
+    thumbnail: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b',
     title: 'Desert Wonders',
     description: 'Where silence speaks, dunes shift, and the adventure begins.',
     label: 'Top Choice',
-    background: '/lovable-uploads/7f0810f6-9421-4df7-9654-6dc73bfe53f3.png',
+    background: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b',
   },
   {
     id: '2',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    thumbnail: '/lovable-uploads/2a48033f-11a4-44cc-8b8b-31ed013ea791.png',
+    thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5',
     title: 'Ocean Depths',
     description: 'Dive into the mysterious world beneath the waves.',
     label: 'New',
-    background: '/lovable-uploads/7f0810f6-9421-4df7-9654-6dc73bfe53f3.png',
+    background: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5',
   },
   {
     id: '3',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    thumbnail: '/lovable-uploads/2a48033f-11a4-44cc-8b8b-31ed013ea791.png',
+    thumbnail: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
     title: 'Mountain Peaks',
     description: 'Rise above the clouds and touch the sky.',
     label: 'Mixed',
-    background: '/lovable-uploads/7f0810f6-9421-4df7-9654-6dc73bfe53f3.png',
+    background: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
   },
   {
     id: '4',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    thumbnail: '/lovable-uploads/2a48033f-11a4-44cc-8b8b-31ed013ea791.png',
+    thumbnail: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
     title: 'Forest Tales',
     description: 'Where ancient trees whisper stories of the wild.',
     label: 'Collection',
-    background: '/lovable-uploads/7f0810f6-9421-4df7-9654-6dc73bfe53f3.png',
+    background: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
   },
 ];
 
@@ -106,7 +107,7 @@ const VideoCarousel = () => {
 
   return (
     <div className="relative w-full max-w-7xl mx-auto p-4">
-      {/* Background Image - Fixed path issue */}
+      {/* Background Image with fixed URLs */}
       <div 
         className="fixed inset-0 z-0 transition-opacity duration-500 bg-cover bg-center bg-no-repeat"
         style={{
@@ -167,7 +168,7 @@ const VideoCarousel = () => {
                 }}
                 onClick={() => setCurrentVideoIndex(index)}
               >
-                {/* Thumbnail - Fixed path issue */}
+                {/* Thumbnail with fixed URLs */}
                 {!isVideoPlaying[index] && (
                   <img
                     src={video.thumbnail}
