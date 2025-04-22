@@ -261,10 +261,10 @@ const VideoCarousel = () => {
 
       <div 
         ref={containerRef}
-        className="relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[50vh] md:h-[60vh] scale-[0.85] md:scale-100"
+        className="relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[60vh] md:h-[65vh] scale-75 md:scale-90"
       >
         <div 
-          className="relative flex gap-2 md:gap-4 transform-gpu" 
+          className="relative flex gap-3 md:gap-4 transform-gpu" 
           style={{ 
             transform: `rotateX(5deg) translateZ(-30px)`,
             transformStyle: 'preserve-3d'
