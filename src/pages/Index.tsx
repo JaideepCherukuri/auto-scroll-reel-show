@@ -1,4 +1,6 @@
 
+import VideoCarousel from '../components/VideoCarousel';
+
 const Index = () => {
   return (
     <div className="h-screen bg-black overflow-hidden flex flex-col items-center justify-center">
