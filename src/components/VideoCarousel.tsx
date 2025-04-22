@@ -20,8 +20,8 @@ const videos: Video[] = [
     id: '1',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     thumbnail: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b',
-    title: 'Desert Wonders',
-    description: 'Where silence speaks, dunes shift, and the adventure begins.',
+    title: 'Tech Frontiers',
+    description: 'Exploring the cutting edge of technology.',
     label: 'Top Choice',
     background: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b',
     aspectRatio: '16:9',
@@ -30,18 +30,18 @@ const videos: Video[] = [
     id: '2',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
     thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5',
-    title: 'Ocean Depths',
-    description: 'Dive into the mysterious world beneath the waves.',
+    title: 'Digital Matrix',
+    description: 'Journey through the digital realm.',
     label: 'New',
     background: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5',
-    aspectRatio: '4:5',
+    aspectRatio: '9:16',
   },
   {
     id: '3',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     thumbnail: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
-    title: 'Mountain Peaks',
-    description: 'Rise above the clouds and touch the sky.',
+    title: 'Nature\'s Call',
+    description: 'Wilderness in its purest form.',
     label: 'Mixed',
     background: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
     aspectRatio: '1:1',
@@ -50,11 +50,71 @@ const videos: Video[] = [
     id: '4',
     url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
     thumbnail: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
-    title: 'Forest Tales',
-    description: 'Where ancient trees whisper stories of the wild.',
+    title: 'Urban Stories',
+    description: 'City life through a new lens.',
     label: 'Collection',
     background: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+    aspectRatio: '16:9',
+  },
+  {
+    id: '5',
+    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6',
+    title: 'Code Masters',
+    description: 'Programming excellence unveiled.',
+    label: 'Top Choice',
+    background: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6',
+    aspectRatio: '4:5',
+  },
+  {
+    id: '6',
+    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
+    title: 'AI Future',
+    description: 'The next frontier of intelligence.',
+    label: 'New',
+    background: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
+    aspectRatio: '1:1',
+  },
+  {
+    id: '7',
+    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d',
+    title: 'Digital Work',
+    description: 'Modern workplace evolution.',
+    label: 'Mixed',
+    background: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d',
     aspectRatio: '9:16',
+  },
+  {
+    id: '8',
+    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1',
+    title: 'Tech Horizons',
+    description: 'Exploring future possibilities.',
+    label: 'Collection',
+    background: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1',
+    aspectRatio: '16:9',
+  },
+  {
+    id: '9',
+    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
+    title: 'Code Art',
+    description: 'Where programming meets creativity.',
+    label: 'New',
+    background: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
+    aspectRatio: '4:5',
+  },
+  {
+    id: '10',
+    url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7',
+    title: 'Digital Life',
+    description: 'Technology in everyday moments.',
+    label: 'Top Choice',
+    background: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7',
+    aspectRatio: '1:1',
   },
 ];
 
@@ -154,34 +214,34 @@ const VideoCarousel = () => {
 
       <div 
         ref={containerRef}
-        className="relative z-10 perspective-1000 transform-gpu h-[400px] flex items-center justify-center overflow-visible"
+        className="relative z-10 perspective-2000 transform-gpu h-[500px] flex items-center justify-center overflow-visible"
       >
         <div 
-          className="relative flex gap-4 transform-gpu" 
+          className="relative flex gap-6 transform-gpu" 
           style={{ 
-            transform: `rotateX(10deg) translateZ(-100px)`,
+            transform: `rotateX(12deg) translateZ(-150px)`,
             transformStyle: 'preserve-3d'
           }}
         >
           {videos.map((video, index) => {
             const offset = index - currentVideoIndex;
-            const rotation = offset * -15;
-            const translateZ = Math.abs(offset) * 20;
-            const opacity = 1 - Math.min(0.6, Math.abs(offset) * 0.2);
+            const rotation = offset * -12;
+            const translateZ = Math.abs(offset) * 30;
+            const opacity = 1 - Math.min(0.6, Math.abs(offset) * 0.15);
 
             return (
               <div
                 key={video.id}
                 className={cn(
                   "relative overflow-hidden cursor-pointer transition-all duration-500 transform-gpu",
-                  "w-[250px]",
+                  "w-[300px]",
                   getAspectRatioClass(video.aspectRatio),
                   "rounded-lg",
                   "hover:ring-2 hover:ring-white/50",
                   index === currentVideoIndex && "ring-2 ring-white scale-110 z-10"
                 )}
                 style={{
-                  transform: `perspective(1000px) rotateY(${rotation}deg) translateZ(${translateZ}px)`,
+                  transform: `perspective(2000px) rotateY(${rotation}deg) translateZ(${translateZ}px)`,
                   opacity: opacity,
                   transformOrigin: 'center center',
                 }}
