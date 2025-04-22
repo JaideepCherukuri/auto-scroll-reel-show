@@ -1,5 +1,6 @@
 
 import VideoCarousel from '../components/VideoCarousel';
+import { videos } from '../data/videos';
 
 const Index = () => {
   return (
