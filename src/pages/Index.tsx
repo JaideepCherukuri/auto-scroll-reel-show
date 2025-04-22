@@ -36,7 +36,7 @@ const Index = () => {
           <div 
             className={`w-full max-w-[85vw] md:max-w-[90vw] transform-gpu transition-all duration-2000 ease-out perspective-[2000px] transform-style-preserve-3d ${
               isTransitioning 
-                ? 'scale-[0.4] md:scale-[0.5] opacity-95' 
+                ? 'scale-[0.95] md:scale-[0.98] opacity-95' 
                 : 'scale-[0.65] md:scale-[0.8] opacity-100'
             }`}
           >
