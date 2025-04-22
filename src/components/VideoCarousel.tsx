@@ -213,7 +213,7 @@ const VideoCarousel = () => {
   };
 
   return (
-    <div className="relative w-full max-w-[2000px] mx-auto p-4">
+    <div className="relative w-full mx-auto">
       <div 
         className="fixed inset-0 z-0 transition-opacity duration-500 bg-cover bg-center bg-no-repeat"
         style={{
@@ -222,11 +222,11 @@ const VideoCarousel = () => {
         }}
       />
 
-      <div className="relative z-10 text-center mb-8 text-white">
-        <h1 className="text-5xl font-serif mb-4 tracking-wide animate-fade-in">
+      <div className="relative z-10 text-center mb-4 text-white">
+        <h1 className="text-3xl md:text-4xl font-serif mb-2 tracking-wide animate-fade-in">
           {videos[currentVideoIndex].title}
         </h1>
-        <p className="text-xl text-gray-200 mb-6 animate-fade-in">
+        <p className="text-base md:text-lg text-gray-200 mb-3 animate-fade-in max-w-2xl mx-auto">
           {videos[currentVideoIndex].description}
         </p>
         <Button
@@ -244,37 +244,37 @@ const VideoCarousel = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
+        className="fixed left-2 md:left-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
         onClick={handlePrevious}
       >
-        <ArrowLeft className="h-6 w-6" />
+        <ArrowLeft className="h-4 w-4 md:h-6 md:w-6" />
       </Button>
 
       <Button
         variant="ghost"
         size="icon"
-        className="fixed right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
+        className="fixed right-2 md:right-8 top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 text-white"
         onClick={handleNext}
       >
-        <ArrowRight className="h-6 w-6" />
+        <ArrowRight className="h-4 w-4 md:h-6 md:w-6" />
       </Button>
 
       <div 
         ref={containerRef}
-        className="relative z-10 perspective-2000 transform-gpu h-[700px] flex items-center justify-center overflow-visible"
+        className="relative z-10 perspective-2000 transform-gpu flex items-center justify-center overflow-visible h-[50vh] md:h-[60vh] scale-[0.85] md:scale-100"
       >
         <div 
-          className="relative flex gap-4 transform-gpu" 
+          className="relative flex gap-2 md:gap-4 transform-gpu" 
           style={{ 
-            transform: `rotateX(5deg) translateZ(-50px)`,
+            transform: `rotateX(5deg) translateZ(-30px)`,
             transformStyle: 'preserve-3d'
           }}
         >
           {getVisibleIndices().map((index, i) => {
-            const offset = i - 2; // Center is at index 2
-            const rotation = offset * -12; // Reduced rotation angle
-            const translateX = offset * 40; // Reduced spacing
-            const translateZ = Math.abs(offset) * -80; // Increased depth
+            const offset = i - 2;
+            const rotation = offset * -10;
+            const translateX = offset * 30;
+            const translateZ = Math.abs(offset) * -60;
             const opacity = 1 - Math.min(0.8, Math.abs(offset) * 0.3);
             const video = videos[index];
 
